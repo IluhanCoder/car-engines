@@ -1,0 +1,32 @@
+POST http://localhost:5000/user
+Content-Type: application/json
+
+{
+    "credentials": {
+        "name": "test",
+        "email": "test@gmail.com",
+        "password": "123"
+    }
+}
+
+###
+
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "credentials": {
+        "email": "test@gmail.com",
+        "password": "123"
+    }
+}
+
+###
+
+POST http://localhost:5000/test
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY1NTM1YWRhNmUyYzVlYWRiNTllY2NlNCIsIm5hbWUiOiJ0ZXN0IiwiZW1haWwiOiJ0ZXN0QGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJiJDA0JFg3QVJHTHQ2Q3VoSTl2bXU5cWdLM2Uwb2N5VTBPQU1kRGRlY1k2Q2tNU2Z5Ym5kMXhySWVpIiwiX192IjowfSwiaWF0IjoxNzAwMTQzMjY1fQ.fou3EGnAyJB2QhgtN4qx2FUAGqP58uEb06KmjsOMGcg
+Content-Type: application/json
+
+{
+    
+}
