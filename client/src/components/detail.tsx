@@ -10,6 +10,7 @@ interface LocalParams {
 
 const DetailComponent = ({detail, handleChange, index, handleAdd, className}: LocalParams) => {
     return <div className={className}>
+                <div>{index}</div>
                 <form>
                         <div>
                             <label>{detail.name}</label>
