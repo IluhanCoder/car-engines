@@ -30,15 +30,15 @@ const CardPage = () => {
         const children = findAllChilren(detail);
         const currentDetailIndex = details.indexOf(detail);
         return <div className="flex flex-col gap-5" key={currentDetailIndex} >
-            <div className="flex flex-row">
+            <div className="flex flex-row gap-5 z-10">
                 <DetailComponent className={currentDetailIndex.toString()} detail={detail} handleAdd={handleAdd} handleChange={handleChange} index={currentDetailIndex}/>
             </div>
-            <div className="flex flex-row"> {
+            <div className="flex flex-row gap-5"> {
                 children.map((child: Detail) => {
                     const childIndex = details.indexOf(child);
                     const grandChilds = findAllChilren(child);
                     if(grandChilds.length > 0) return renderDetailWithChildren(child);
-                    else return <div key={childIndex}>
+                    else return <div key={childIndex} className="z-10">
                             <DetailComponent className={childIndex.toString()} detail={child} handleAdd={handleAdd} handleChange={handleChange} index={childIndex}/>
                         </div>
                 })
@@ -55,15 +55,15 @@ const CardPage = () => {
             children.forEach((child) => {
                 const childIndex = details.indexOf(child);
                 console.log(`${childIndex}${detailIndex}`);
-                newLines.push(<SteppedLineTo key={`${childIndex}${detailIndex}`} from={detailIndex.toString()} to={childIndex.toString()} />);
+                newLines.push(<SteppedLineTo within="line-container" zIndex={1} borderWidth={3} borderColor="#c7c7c7" key={`${childIndex}${detailIndex}`} from={detailIndex.toString()} to={childIndex.toString()} />);
             });
         });
     
         setLines(newLines);
     }
 
-    return <div>
-        <div>
+    return <div className="h-full">
+        <div className="bg-gray-100 w-fit line-container h-full p-4">
             {renderDetailWithChildren(details[0])}
             {lines}
         </div>

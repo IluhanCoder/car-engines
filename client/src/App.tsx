@@ -7,7 +7,7 @@ import AuthProvider from './components/auth-provider';
 
 function App() {
   return (
-    <div className="App">
+    <div className="App h-full">
       <header>
         this is header
       </header>
