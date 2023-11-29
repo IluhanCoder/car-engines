@@ -23,9 +23,11 @@ const CardPage = () => {
     }
 
     const handleDelete = (index: number) => {
-        const temp = details;
-        temp.splice(index, 1);
-        setDetails([...temp]);
+        const parentDetail = details[index];
+        const children = findAllChilren(parentDetail);
+        const newDetails = details.filter((detail: Detail) => !children.includes(detail) && detail !== parentDetail);
+        setDetails([...newDetails]);
+        console.log(details);
     }
 
     useEffect(() => {setLines([]); generateLines()}, [details])
@@ -59,7 +61,6 @@ const CardPage = () => {
             const children = findAllChilren(detail);
             children.forEach((child) => {
                 const childIndex = details.indexOf(child);
-                console.log(`${childIndex}${detailIndex}`);
                 newLines.push(<SteppedLineTo within="line-container" zIndex={1} borderWidth={3} borderColor="#c7c7c7" key={`${childIndex}${detailIndex}`} from={detailIndex.toString()} to={childIndex.toString()} />);
             });
         });

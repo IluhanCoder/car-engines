@@ -6,6 +6,17 @@ const DetailsList: Detail[] = [
         hoursUsed: 0,
         expiration: 10000,
         voltage: 220
+    },
+    {
+        name: "свіча",
+        hoursUsed: 0,
+        expiration: 10000,
+    },
+    {
+        name: "кардан",
+        hoursUsed: 0,
+        expiration: 10000,
+        rpm: 1000
     }
 ]
 

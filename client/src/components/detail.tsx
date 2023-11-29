@@ -1,3 +1,4 @@
+import DetailsList from "../static/details-list";
 import buttonStyle from "../styles/button-style";
 import inputStyle from "../styles/input-style";
 import Detail from "../types/detail-type"
@@ -12,13 +13,24 @@ interface LocalParams {
 }
 
 const DetailComponent = ({detail, handleChange, index, handleAdd, className, handleDelete}: LocalParams) => {
+    const localChangeHandler = (field: string, value: any) => {
+        (detail as any)[field] = value;
+        handleChange(detail, index);
+    }
+
     return <div className={`${className} rounded bg-white shadow-lg p-4 border`}>
                 <form className="flex flex-col gap-2">
                         <div className="flex justify-end">
                             <button type="button" className={buttonStyle} onClick={() => handleDelete(index)}>X</button>
                         </div>
                         <div className="text-center">
-                            <label>{detail.name}</label>
+                            <select value={detail.name} onChange={(e) => localChangeHandler("name", e.target.value)}>
+                                {
+                                    DetailsList.map((detail: Detail) => {
+                                        return <option>{detail.name}</option>
+                                    })
+                                }
+                            </select>
                         </div>
                         <div>
                             <label className="mt-1">Кількість годин</label>
@@ -31,19 +43,19 @@ const DetailComponent = ({detail, handleChange, index, handleAdd, className, han
                         {
                             detail.rpm && <div>
                                 <label className="mt-1">Кількість обертів</label>
-                                <input className={inputStyle} type="number" value={detail.rpm} onChange={(e) => handleChange({...detail, rpm: Number(e.target.value)},index)}/>
+                                <input className={inputStyle} type="number" value={detail.rpm} onChange={(e) => localChangeHandler("rpm", e.target.value)}/>
                             </div>
                         }
                         {
                             detail.voltage && <div>
                                 <label className="mt-1">Напруга</label>
-                                <input className={inputStyle}  type="number" value={detail.voltage} onChange={(e) => handleChange({...detail, voltage: Number(e.target.value)},index)}/>
+                                <input className={inputStyle}  type="number" value={detail.voltage} onChange={(e) => localChangeHandler("voltage", e.target.value)}/>
                             </div>
                         }
                         {
                             detail.temperature && <div>
                                 <label className="mt-1">Температура</label>
-                                <input className={inputStyle}  type="number" value={detail.temperature} onChange={(e) => handleChange({...detail, temperature: Number(e.target.value)},index)}/>
+                                <input className={inputStyle}  type="number" value={detail.temperature} onChange={(e) => localChangeHandler("temperature", e.target.value)}/>
                             </div>
                         }
                         <div className="flex justify-center">
