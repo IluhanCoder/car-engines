@@ -7,12 +7,16 @@ interface LocalParams {
     handleChange: (detail: Detail, index: number) => void,
     index: number,
     handleAdd: (parent: Detail) => void,
-    className?: string
+    className?: string,
+    handleDelete: (index: number) => void 
 }
 
-const DetailComponent = ({detail, handleChange, index, handleAdd, className}: LocalParams) => {
+const DetailComponent = ({detail, handleChange, index, handleAdd, className, handleDelete}: LocalParams) => {
     return <div className={`${className} rounded bg-white shadow-lg p-4 border`}>
                 <form className="flex flex-col gap-2">
+                        <div className="flex justify-end">
+                            <button type="button" className={buttonStyle} onClick={() => handleDelete(index)}>X</button>
+                        </div>
                         <div className="text-center">
                             <label>{detail.name}</label>
                         </div>

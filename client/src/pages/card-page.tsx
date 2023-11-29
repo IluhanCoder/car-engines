@@ -22,6 +22,12 @@ const CardPage = () => {
         setDetails([...newDetails]);
     }
 
+    const handleDelete = (index: number) => {
+        const temp = details;
+        temp.splice(index, 1);
+        setDetails([...temp]);
+    }
+
     useEffect(() => {setLines([]); generateLines()}, [details])
 
     const findAllChilren = (parentDetail: Detail) => details.filter((currentDetail: Detail) => currentDetail.parent === parentDetail);
@@ -31,7 +37,7 @@ const CardPage = () => {
         const currentDetailIndex = details.indexOf(detail);
         return <div className="flex flex-col gap-5" key={currentDetailIndex} >
             <div className="flex flex-row gap-5 z-10">
-                <DetailComponent className={currentDetailIndex.toString()} detail={detail} handleAdd={handleAdd} handleChange={handleChange} index={currentDetailIndex}/>
+                <DetailComponent handleDelete={handleDelete} className={currentDetailIndex.toString()} detail={detail} handleAdd={handleAdd} handleChange={handleChange} index={currentDetailIndex}/>
             </div>
             <div className="flex flex-row gap-5"> {
                 children.map((child: Detail) => {
@@ -39,7 +45,7 @@ const CardPage = () => {
                     const grandChilds = findAllChilren(child);
                     if(grandChilds.length > 0) return renderDetailWithChildren(child);
                     else return <div key={childIndex} className="z-10">
-                            <DetailComponent className={childIndex.toString()} detail={child} handleAdd={handleAdd} handleChange={handleChange} index={childIndex}/>
+                            <DetailComponent handleDelete={handleDelete} className={childIndex.toString()} detail={child} handleAdd={handleAdd} handleChange={handleChange} index={childIndex}/>
                         </div>
                 })
             }</div>
@@ -47,7 +53,6 @@ const CardPage = () => {
     }
 
     const generateLines = () => {
-        console.log("generating");
         const newLines: JSX.Element[] = [];
     
         details.forEach((detail, detailIndex) => {
