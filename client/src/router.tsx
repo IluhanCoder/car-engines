@@ -16,7 +16,7 @@ const router = createBrowserRouter([
     {
       path: "/card",
       element: <CardPage/>
-    }
+    },
 ]);
 
 export default router;

@@ -7,19 +7,24 @@ import { SteppedLineTo } from "react-lineto";
 const CardPage = () => {
     
     const [details, setDetails] = useState<Detail[]>([DetailsList[0]]);
-    const [detailsTable, setDetailsTable] = useState<Detail|null[][]>([]);
     const [lines, setLines] = useState<JSX.Element[]>([]);
 
     const handleChange = (detail: Detail, index: number) => {
         const temp = details;
         temp[index] = detail;
+        const children = findAllChilren(detail);
+        children.map((child: Detail) => {
+            if(!detail.allowedChildren?.includes(child)) temp.splice(details.indexOf(child, 1))
+        })
         setDetails([...temp]);
     }
 
     const handleAdd = (parentDetail: Detail) => {
-        const newDetail = {...DetailsList[0], parent: parentDetail};
-        const newDetails = [...details, newDetail];
-        setDetails([...newDetails]);
+        if(parentDetail.allowedChildren) {
+            const newDetail = {...parentDetail.allowedChildren[0], parent: parentDetail};
+            const newDetails = [...details, newDetail];
+            setDetails([...newDetails]);
+        }
     }
 
     const handleDelete = (index: number) => {
