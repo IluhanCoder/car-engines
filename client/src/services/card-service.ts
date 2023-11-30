@@ -15,4 +15,8 @@ export default new class CardService {
     async fetchUserCards(userId: string) {
         return (await $api.get(`cards/${userId}`)).data;
     }
+
+    async getCard(cardId: string) {
+        return (await $api.get(`card/${cardId}`)).data;
+    }
 }

@@ -9,57 +9,71 @@ import currentProjectStore from "../stores/currentProjectStore";
 import buttonStyle from "../styles/button-style";
 import { grayBoldLabelStyle, largeLabelStyle } from "../styles/label-style";
 import Separator from "../components/separator";
+import Project from "../types/project-type";
+import userStore from "../stores/userStore";
+import { observer } from "mobx-react-lite";
 
 const ProjectPage = () => {
-    const projectFromStore = currentProjectStore.project;
+    const {projectId} = useParams();
 
-    const [details, setDetails] = useState<Detail[]>(projectFromStore?.data ?? []);
+    const [project, setProject] = useState<Project>();
+
+    const getProjectData = async () => {
+        const res = await cardService.getCard(projectId!);
+        setProject({...res.data});
+    }
+
+    useEffect(() => {
+        if(userStore.user) {
+            getProjectData();
+        }
+    } ,[userStore.user])
+
     const [lines, setLines] = useState<JSX.Element[]>([]);
  
     const handleChange = (detail: Detail, index: number) => {
-        const temp = details;
+        const temp = project?.data!;
         temp[index] = detail;
         const children = findAllChilren(detail);
-        children.map((child: Detail) => {
-            if(!detail.allowedChildren?.includes(child)) temp.splice(details.indexOf(child, 1))
+        children!.map((child: Detail) => {
+            if(!detail.allowedChildren?.includes(child)) temp.splice(project?.data!.indexOf(child, 1)!)
         })
-        setDetails([...temp]);
+        setProject({...project!, data: [...temp!]});
     }
 
     const handleAdd = (parentDetail: Detail) => {
         if(parentDetail.allowedChildren) {
             const newDetail = {...parentDetail.allowedChildren[0], parent: parentDetail};
-            const newDetails = [...details, newDetail];
-            setDetails([...newDetails]);
+            const newDetails = [...project?.data!, newDetail];
+            setProject({...project!, data: [...newDetails!]});
         }
     }
 
     const handleDelete = (index: number) => {
-        const parentDetail = details[index];
-        const children = findAllChilren(parentDetail);
-        const newDetails = details.filter((detail: Detail) => !children.includes(detail) && detail !== parentDetail);
-        setDetails([...newDetails]);
-        console.log(details);
+        const parentDetail = project?.data![index];
+        const children = findAllChilren(parentDetail!);
+        const newDetails = project?.data.filter((detail: Detail) => !children!.includes(detail) && detail !== parentDetail);
+        setProject({...project!, data: [...newDetails!]});
     }
 
-    useEffect(() => {setLines([]); generateLines()}, [details])
+    useEffect(() => {setLines([]); generateLines()}, [project?.data])
 
-    const findAllChilren = (parentDetail: Detail) => details.filter((currentDetail: Detail) => currentDetail.parent === parentDetail);
+    const findAllChilren = (parentDetail: Detail) => project?.data.filter((currentDetail: Detail) => currentDetail.parent === parentDetail);
 
     const renderDetailWithChildren = (detail: Detail) => {
         const children = findAllChilren(detail);
-        const currentDetailIndex = details.indexOf(detail);
+        const currentDetailIndex = project?.data!.indexOf(detail);
         return <div className="flex flex-col gap-8 flex-nowrap" key={currentDetailIndex} >
             <div className="flex flex-nowrap gap-5 z-10">
-                <DetailComponent handleDelete={handleDelete} className={currentDetailIndex.toString()} detail={detail} handleAdd={handleAdd} handleChange={handleChange} index={currentDetailIndex}/>
+                <DetailComponent handleDelete={handleDelete} className={currentDetailIndex!.toString()} detail={detail} handleAdd={handleAdd} handleChange={handleChange} index={currentDetailIndex!}/>
             </div>
             <div className="flex flex-nowrap gap-8"> {
-                children.map((child: Detail) => {
-                    const childIndex = details.indexOf(child);
+                children!.map((child: Detail) => {
+                    const childIndex = project?.data!.indexOf(child);
                     const grandChilds = findAllChilren(child);
-                    if(grandChilds.length > 0) return renderDetailWithChildren(child);
+                    if(grandChilds!.length > 0) return renderDetailWithChildren(child);
                     else return <div key={childIndex} className="z-10">
-                            <DetailComponent handleDelete={handleDelete} className={childIndex.toString()} detail={child} handleAdd={handleAdd} handleChange={handleChange} index={childIndex}/>
+                            <DetailComponent handleDelete={handleDelete} className={childIndex!.toString()} detail={child} handleAdd={handleAdd} handleChange={handleChange} index={childIndex!}/>
                         </div>
                 })
             }</div>
@@ -68,10 +82,10 @@ const ProjectPage = () => {
 
     const generateLines = () => {
         const newLines: JSX.Element[] = [];
-        details.map((detail: Detail, detailIndex: number) => {
+        project?.data!.map((detail: Detail, detailIndex: number) => {
             const children = findAllChilren(detail);
-            children.forEach((child) => {
-                const childIndex = details.indexOf(child);
+            children!.forEach((child) => {
+                const childIndex = project.data!.indexOf(child);
 
                 const container = document.getElementsByClassName("line-container")[0];
                 const containerRect = container.getBoundingClientRect();
@@ -101,41 +115,43 @@ const ProjectPage = () => {
         setLines([...newLines]);
     }
 
-    return <div className="flex">
-        <div className="overflow-auto grow">
-            <div className="h-screen p-4 relative line-container">
-                <div className="absolute w-full h-full">
-                    {renderDetailWithChildren(details[0])}
-                    {lines}
+    if(project)
+        return <div className="flex">
+            <div className="overflow-auto grow">
+                <div className="h-screen p-4 relative line-container">
+                    <div className="absolute w-full h-full">
+                        {renderDetailWithChildren(project.data[0])}
+                        {lines}
+                    </div>
+                </div>
+            </div>
+            <div className="z-20 bg-gray-100 border-l-2 border-gray-200 shadow-lg h-screen">
+                <div className="flex flex-col py-6 px-2 gap-1">
+                    <div className="flex justify-center">
+                        <label className={grayBoldLabelStyle}>Назва проекту:</label> 
+                    </div>
+                    <div className="flex justify-center">
+                        <label className={largeLabelStyle}>{project?.name}</label>
+                    </div>
+                </div>
+                <Separator/>
+                <div className="flex flex-col p-6 gap-4">
+                    <div className="flex justify-center">
+                        <button type="button" className={buttonStyle + " w-full"}>зберегти зміни</button>
+                    </div>
+                    <div className="flex justify-center">
+                        <button type="button" className={buttonStyle + " w-full"}>видалити проект</button>
+                    </div>
+                </div>
+                <Separator/>
+                <div className="flex flex-col p-6 gap-4">
+                    <div className="flex justify-center ">
+                        <button type="button" className={buttonStyle + " w-full"}>режим прогнозування</button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div className="z-20 bg-gray-100 border-l-2 border-gray-200 shadow-lg h-screen">
-            <div className="flex flex-col py-6 px-2 gap-1">
-                <div className="flex justify-center">
-                    <label className={grayBoldLabelStyle}>Назва проекту:</label> 
-                </div>
-                <div className="flex justify-center">
-                    <label className={largeLabelStyle}>{projectFromStore?.name}</label>
-                </div>
-            </div>
-            <Separator/>
-            <div className="flex flex-col p-6 gap-4">
-                <div className="flex justify-center">
-                    <button type="button" className={buttonStyle + " w-full"}>зберегти зміни</button>
-                </div>
-                <div className="flex justify-center">
-                    <button type="button" className={buttonStyle + " w-full"}>видалити проект</button>
-                </div>
-            </div>
-            <Separator/>
-            <div className="flex flex-col p-6 gap-4">
-                <div className="flex justify-center ">
-                    <button type="button" className={buttonStyle + " w-full"}>режим прогнозування</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    else return <div>...</div>
 }
 
-export default ProjectPage;
+export default observer(ProjectPage);

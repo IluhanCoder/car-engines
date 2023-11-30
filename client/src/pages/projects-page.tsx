@@ -30,9 +30,8 @@ const ProjectsPage = () => {
         await cardService.createCard(defaultDetails, projectName ?? "без назви");
     }
 
-    const handleOpenProject = (project: Project) => {
-        currentProjectStore.setProject(project);
-        navigate(`/project`);
+    const handleOpenProject = (projectId: string) => {
+        navigate(`/project/${projectId}`)
     };
 
     return <div className="flex flex-col">
@@ -44,7 +43,7 @@ const ProjectsPage = () => {
                         {project.name}
                     </div>
                     <div>
-                        <button type="button" className={buttonStyle} onClick={() => handleOpenProject(project)}>відкрити</button>
+                        <button type="button" className={buttonStyle} onClick={() => handleOpenProject(project._id)}>відкрити</button>
                     </div>
                 </div>
             })
