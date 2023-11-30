@@ -12,7 +12,6 @@ const LoginPage = () => {
         try {
             if(email.length == 0 || password.length == 0) throw new Error("всі поля мають бути заповнені");
             const response = await userService.login({email, password});
-            console.log(response);
             if(response.status == "success") navigate("/");
         } catch (error) {
             console.log(error)

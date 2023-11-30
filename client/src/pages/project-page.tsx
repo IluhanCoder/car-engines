@@ -3,12 +3,16 @@ import Detail from "../types/detail-type";
 import DetailsList from "../static/details-list";
 import DetailComponent from "../components/detail";
 import { SteppedLineTo } from "react-lineto";
+import { useParams } from "react-router-dom";
+import cardService from "../services/card-service";
+import currentProjectStore from "../stores/currentProjectStore";
 
-const CardPage = () => {
-    
-    const [details, setDetails] = useState<Detail[]>([DetailsList[0]]);
+const ProjectPage = () => {
+    const projectFromStore = currentProjectStore.project?.data;
+
+    const [details, setDetails] = useState<Detail[]>(projectFromStore ?? []);
     const [lines, setLines] = useState<JSX.Element[]>([]);
-
+ 
     const handleChange = (detail: Detail, index: number) => {
         const temp = details;
         temp[index] = detail;
@@ -81,4 +85,4 @@ const CardPage = () => {
     </div>
 }
 
-export default CardPage;
+export default ProjectPage;

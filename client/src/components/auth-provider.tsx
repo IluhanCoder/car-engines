@@ -11,7 +11,7 @@ const AuthProvider = (params: LocalParams) => {
     const { children } = params;
 
     const checkAuth = async () => {
-        const user = await userService.checkAuth();
+        await userService.checkAuth();
     }
 
     useEffect(() => {

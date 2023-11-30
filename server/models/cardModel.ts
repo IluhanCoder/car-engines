@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const cardSchema = new mongoose.Schema({
     name: String,
     creatorId: mongoose.Types.ObjectId,
-    data: Object,
+    data: [Object],
     creationTime: Date,
     lastChangesTime: Date
   });
