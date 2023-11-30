@@ -1,6 +1,6 @@
 import DetailsList from "../static/details-list";
 import buttonStyle from "../styles/button-style";
-import inputStyle from "../styles/input-style";
+import inputStyle, { selectStyle } from "../styles/input-style";
 import Detail from "../types/detail-type"
 
 interface LocalParams {
@@ -31,13 +31,13 @@ const DetailComponent = ({detail, handleChange, index, handleAdd, className, han
         }
     }
 
-    return <div className={`${className} rounded bg-white shadow-lg p-4 border`}>
-                <form className="flex flex-col gap-2">
+    return <div className={`${className} whitespace-nowrap rounded bg-white shadow-lg py-4 px-6 border text-sm`}>
+                <form className="flex flex-col gap-3">
                         {detail.parent && <div className="flex justify-end">
                             <button type="button" className={buttonStyle} onClick={() => handleDelete(index)}>X</button>
                         </div>}
                         <div className="text-center">
-                            <select value={detail.name} onChange={(e) => localChangeHandler("name", e.target.value)}>
+                            <select className={selectStyle} value={detail.name} onChange={(e) => localChangeHandler("name", e.target.value)}>
                                 {
                                     (detail.parent) ? detail.parent.allowedChildren!.map((detail: Detail) => {
                                         return <option>{detail.name}</option>
@@ -47,27 +47,27 @@ const DetailComponent = ({detail, handleChange, index, handleAdd, className, han
                                 }
                             </select>
                         </div>
-                        <div>
-                            <label className="mt-1">Кількість годин</label>
+                        <div className="w-full grid grid-cols-2">
+                            <label className="mt-1 overflow-auto">Кількість годин</label>
                             <input className={inputStyle} type="text" value={detail.hoursUsed} onChange={(e) => localChangeHandler("hoursUsed", Number(e.target.value))}/>
                         </div>
-                        <div>
-                            <label className="mt-1">Термін використання</label>
+                        <div className="w-full grid grid-cols-2">
+                            <label className="mt-1 overflow-auto">Термін використання</label>
                             <input className={inputStyle} type="text" value={detail.durability} onChange={(e) => localChangeHandler("durability", Number(e.target.value))}/>
                         </div>
                         {
-                            detail.rpm && <div>
-                                <label className="mt-1">Кількість обертів</label>
+                            detail.rpm && <div className="w-full grid grid-cols-2">
+                                <label className="mt-1 overflow-auto">Кількість обертів</label>
                                 <input className={inputStyle} type="number" value={detail.rpm} onChange={(e) => localChangeHandler("rpm", e.target.value)}/>
                             </div>
                         }
                         {
-                            detail.voltage && <div>
-                                <label className="mt-1">Напруга</label>
+                            detail.voltage && <div className="w-full grid grid-cols-2">
+                                <label className="mt-1 overflow-auto">Напруга</label>
                                 <input className={inputStyle}  type="number" value={detail.voltage} onChange={(e) => localChangeHandler("voltage", e.target.value)}/>
                             </div>
                         }
-                        {detail.allowedChildren && <div className="flex justify-center">
+                        {detail.allowedChildren && <div className="flex justify-center mt-2">
                             <button className={buttonStyle} type="button" onClick={() => handleAdd(detail)}>додати</button>
                         </div>}
                     </form>

@@ -8,9 +8,6 @@ import AuthProvider from './components/auth-provider';
 function App() {
   return (
     <div className="App h-full">
-      <header>
-        this is header
-      </header>
       <main>
         <AuthProvider>
           <RouterProvider router={router}/>

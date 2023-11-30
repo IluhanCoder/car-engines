@@ -1,2 +1,2 @@
-const buttonStyle = "rounded border shadow-md p-1 hover:bg-gray-100 ease-in duration-100";
+const buttonStyle = "rounded border border-gray-400 px-2 bg-gray-200 hover:bg-gray-300 ease-in duration-100 whitespace-nowrap";
 export default buttonStyle;
