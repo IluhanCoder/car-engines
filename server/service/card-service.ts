@@ -22,8 +22,7 @@ export default new class CardService {
 
     async updateCard(data: Detail[], cardId: string) {
         try {
-            const convertedId = new mongoose.Types.ObjectId(cardId);
-            await cardModel.findOneAndUpdate({_id: convertedId}, {data, lastChangesTime: new Date()});
+            const card = await cardModel.findByIdAndUpdate(cardId, {data, lastChangesTime: new Date()});
         } catch (error) {
             throw error;
         }

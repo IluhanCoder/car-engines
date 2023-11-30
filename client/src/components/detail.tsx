@@ -5,41 +5,28 @@ import Detail from "../types/detail-type"
 
 interface LocalParams {
     detail: Detail,
-    handleChange: (detail: Detail, index: number) => void,
+    handleChange: (detail: Detail, field: string, value: any) => void,
     index: number,
     handleAdd: (parent: Detail) => void,
     className?: string,
-    handleDelete: (index: number) => void 
+    handleDelete: (index: number) => void,
+    parent: Detail | undefined,
 }
 
-const DetailComponent = ({detail, handleChange, index, handleAdd, className, handleDelete}: LocalParams) => {
-    const findDetailFromList = (detailName: string) => {
-        if (detail.parent) return detail.parent?.allowedChildren?.filter((candidate: Detail) => candidate.name === detailName)[0];
-        else return DetailsList.filter((candidate: Detail) => candidate.name === detailName)[0];
-    }
-
+const DetailComponent = ({detail, handleChange, index, handleAdd, className, handleDelete, parent}: LocalParams) => {
     const localChangeHandler = (field: string, value: any) => {
-        if(field === "name") {
-            const dataFromList = findDetailFromList(value);
-            if(!dataFromList) return;
-            const newDetail: Detail = {...dataFromList, parent: detail.parent};
-            handleChange(newDetail, index);
-        }
-        else {
-            (detail as any)[field] = value;
-            handleChange(detail, index);
-        }
+        handleChange(detail, field, value);
     }
 
     return <div className={`${className} whitespace-nowrap rounded bg-white shadow-lg py-4 px-6 border text-sm`}>
                 <form className="flex flex-col gap-3">
-                        {detail.parent && <div className="flex justify-end">
+                        {detail.parentIndex !== undefined && <div className="flex justify-end">
                             <button type="button" className={buttonStyle} onClick={() => handleDelete(index)}>X</button>
                         </div>}
                         <div className="text-center">
                             <select className={selectStyle} value={detail.name} onChange={(e) => localChangeHandler("name", e.target.value)}>
                                 {
-                                    (detail.parent) ? detail.parent.allowedChildren!.map((detail: Detail) => {
+                                    (detail.parentIndex !== undefined) ? parent!.allowedChildren!.map((detail: Detail) => {
                                         return <option>{detail.name}</option>
                                     }) : DetailsList.map((detail: Detail) => {
                                         return <option>{detail.name}</option>
