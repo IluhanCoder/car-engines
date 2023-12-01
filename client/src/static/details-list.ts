@@ -4,15 +4,15 @@ const DetailsList: Detail[] = [
     {
         name: "двигун внутрішнього згорання",
         hoursUsed: 0,
-        rpm: 10000,
-        durability: 10000,
+        rpm: 3000,
+        durability: 80000,
         workCoef: 100,
         isWorkedOut: false,
         allowedChildren: [
             {
                 name: "поршень",
                 hoursUsed: 0,
-                durability: 10000,
+                durability: 80000,
                 workCoef: 100,
                 isWorkedOut: false,
                 allowedChildren: [{
@@ -40,28 +40,28 @@ const DetailsList: Detail[] = [
             {
                 name: "колінвал" ,
                 hoursUsed: 0,
-                durability: 10000,
+                durability: 13000,
                 workCoef: 100,
                 isWorkedOut: false,
             },
             {
-                name: "автомобільне масло",
+                name: "автомобільне мастило",
                 hoursUsed: 0,
-                durability: 10000,
+                durability: 100,
                 workCoef: 100,
                 isWorkedOut: false
             },
             {
                 name: "циліндр" ,
                 hoursUsed: 0,
-                durability: 10000,
+                durability: 40000,
                 workCoef: 100,
                 isWorkedOut: false
             },
             {
                 name: "маховик",
                 hoursUsed: 0,
-                durability: 10000,
+                durability: 15000,
                 workCoef: 100,
                 isWorkedOut: false,
             },
@@ -75,13 +75,13 @@ const DetailsList: Detail[] = [
             {
                 name: "роздільний вал",
                 hoursUsed: 0,
-                durability: 10000,
+                durability: 60000,
                 workCoef: 100,
                 isWorkedOut: false,
                 allowedChildren: [{
                     name: "кулачок роздільного валу",
                     hoursUsed: 0,
-                    durability: 10000,
+                    durability: 60000,
                     workCoef: 100,
                     isWorkedOut: false
                 }]
@@ -103,14 +103,14 @@ const DetailsList: Detail[] = [
             {
                 name: "свічка запалювання",
                 hoursUsed: 0,
-                durability: 10000,
+                durability: 5000,
                 workCoef: 100,
                 isWorkedOut: false,
             },
             {
                 name: "акамулятор",
                 hoursUsed: 0,
-                durability: 10000,
+                durability: 2300,
                 workCoef: 100,
                 voltage: 12,
                 maxVoltage: 15,
@@ -119,7 +119,7 @@ const DetailsList: Detail[] = [
             {
                 name: "ремінь ГРМ",
                 hoursUsed: 0,
-                durability: 10000,
+                durability: 9000,
                 workCoef: 100,
                 isWorkedOut: false
             },

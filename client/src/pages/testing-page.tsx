@@ -112,6 +112,14 @@ const TestingPage = () => {
     }
 
     const calculate = () => {
+        setTestTime(testTime + testStep);
+
+        if(temperature > 30 || temperature < 0) {
+            project?.data.map((detail: Detail) => {
+                updateDetail(detail, "durability", detail.durability - load * Math.abs(temperature+25/3))
+            })
+        }
+
         project?.data.map((currentDetail: Detail, i: number) => {
             if((currentDetail?.voltage!/10)>currentDetail?.maxVoltage!) {
                 const newValue = currentDetail.durability - currentDetail.durability/100 * (currentDetail?.voltage! / 10 - currentDetail?.maxVoltage!) * 8;
@@ -122,25 +130,38 @@ const TestingPage = () => {
                 updateDetail(currentDetail, "isWorkedOut", true);
             }
 
-            if(currentDetail.name === "автомобільне масло" && (temperature <= -40 || temperature >= 40)) {
+            if(currentDetail.name === "автомобільне мастило" && (temperature <= -35 || temperature >= 60)) {
                 updateDetail(currentDetail, "isWorkedOut", true);
             }
 
-            if(currentDetail.name === "акамулятор" && (temperature <= -18 || temperature >= 35)) {
+            if(currentDetail.name === "акамулятор" && (temperature <= -18 || temperature >= 50)) {
                 updateDetail(currentDetail, "isWorkedOut", true);
             }
 
             if(currentDetail.isWorkedOut) {
                 const children = findAllChildrenByIndex(i);
                 children?.map((child: Detail) => {
-                    updateDetail(child, "isWorkedOut", true);
+                    if(currentDetail.name === "двигун внутрішнього згорання") {
+                        if(child.name === "поршень" || child.name === "циліндр" || child.name === "колінвал" || child.name === "маховик" || child.name === "кривошип" || child.name === "важіль" || child.name === "клапан" || child.name === "свічка запалювання" || child.name === "коробка передач") 
+                            updateDetail(child, "isWorkedOut", true);
+                    }
+                    else updateDetail(child, "isWorkedOut", true);
                 })
-            }
+                if(currentDetail.name === "автомобільне мастило") {
+                    const parent = project.data[currentDetail?.parentIndex!];
+                    const newValue = parent.durability - (parent.durability / 100 * 50);
+                    updateDetail(parent, "durability", newValue);
+                }
+                if(currentDetail.name === "поршневі кільця" || currentDetail.name === "поршневий палець") {
+                    const parent = project.data[currentDetail?.parentIndex!];
+                    const newValue = parent.durability - (parent.durability / 100 * 30);
+                    updateDetail(parent, "durability", newValue);
+                }
 
-            if(currentDetail.isWorkedOut && (currentDetail.name === "поршневі кільця" || currentDetail.name === "поршневий палець")) {
-                const parent = project.data[currentDetail?.parentIndex!];
-                const newValue = parent.durability - (parent.durability / 100 * 30);
-                updateDetail(parent, "durability", newValue);
+                if(currentDetail.name === "коробка передач" && load > 1.1) {
+                    const newValue = currentDetail.durability - load * 80;
+                    updateDetail(currentDetail, "durability", newValue);
+                }
             }
         })
 
