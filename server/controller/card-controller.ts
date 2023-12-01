@@ -69,4 +69,20 @@ export default new class CardController {
             })
         }
     }
+
+    async deleteCard(req: Request, res: Response) {
+        try {
+            const {cardId} = req.params;
+            await cardService.deleteCard(cardId);
+            res.status(200).json({
+                status: "success",
+                message: "card has been deleted successfully",
+            })
+        } catch (error) {
+            res.status(error.status ?? 500).json({
+                status: "fail",
+                message: error.message
+            })
+        }
+    }
 }

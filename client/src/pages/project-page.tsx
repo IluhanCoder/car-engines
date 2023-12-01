@@ -44,7 +44,7 @@ const ProjectPage = () => {
         const temp = project?.data;
 
         if(field === "name") {
-            const children = findAllChilren(detail);
+            const children = findAllChildren(detail);
             children!.map((child: Detail) => {
                 if(!detail.allowedChildren?.includes(child)) temp!.splice(project?.data!.indexOf(child)!,1);
             })
@@ -67,14 +67,27 @@ const ProjectPage = () => {
     }
 
     const handleDelete = (detail: Detail) => {
-        const children = findAllChilren(detail!);
-        const newDetails = project?.data.filter((candidate: Detail) => !children!.includes(candidate) && candidate !== detail);
-        setProject({...project!, data: [...newDetails!]});
+        const children = findAllChildren(detail!);
+        const temp = project?.data;
+        for (let index = 0, len = temp?.length; index < len!;()=>{}) {
+            const candidate = temp![index];
+            if(candidate === detail || children?.includes(candidate)) {
+                const candidateIndex = temp!.indexOf(candidate);
+                temp!.splice(candidateIndex, 1);
+                len!--;
+                for(let i = candidateIndex; i < temp!.length; i++) {
+                    if(temp![i].parentIndex! > candidateIndex)temp![i].parentIndex!--;
+                }
+            }
+            else index++;
+        }
+        console.log(temp);
+        setProject({...project!, data: [...temp!]});
     }
 
     useEffect(() => {setLines([]); generateLines()}, [project?.data])
 
-    const findAllChilren = (parentDetail: Detail) => project?.data.filter((currentDetail: Detail) => currentDetail.parentIndex === project.data.indexOf(parentDetail));
+    const findAllChildren = (parentDetail: Detail) => project?.data.filter((currentDetail: Detail) => currentDetail.parentIndex === project.data.indexOf(parentDetail));
 
     const getAllowedNames = (detail: Detail) => {
         const parentDetail = project?.data[detail.parentIndex!];
@@ -82,7 +95,7 @@ const ProjectPage = () => {
     }
 
     const renderDetailWithChildren = (detail: Detail) => {
-        const children = findAllChilren(detail);
+        const children = findAllChildren(detail);
         const currentDetailIndex = project?.data!.indexOf(detail);
         return <div className="flex flex-col gap-8 flex-nowrap" key={currentDetailIndex} >
             <div className="flex flex-nowrap gap-5 z-10">
@@ -91,7 +104,7 @@ const ProjectPage = () => {
             <div className="flex flex-nowrap gap-8"> {
                 children!.map((child: Detail) => {
                     const childIndex = project?.data!.indexOf(child);
-                    const grandChilds = findAllChilren(child);
+                    const grandChilds = findAllChildren(child);
                     if(grandChilds!.length > 0) return renderDetailWithChildren(child);
                     else return <div key={childIndex} className="z-10">
                             <DetailComponent nameOptions={getAllowedNames(child)} handleDelete={handleDelete} className={childIndex!.toString()} detail={child} handleAdd={handleAdd} handleChange={handleChange}/>
@@ -110,10 +123,30 @@ const ProjectPage = () => {
         }
     }
 
+    const handleDeleteProject = () => {
+        const isConfirmed = window.confirm(`ви точно хочете видалити проект '${project?.name}'?`);
+        if(isConfirmed) executeDeleteProject();
+        navigate("/projects");
+    }
+
+    const executeDeleteProject = async () => {
+        try {
+            await cardService.deleteCard(project?._id!);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    const handleEscape = () => {
+        if(window.confirm("Увага. Якщо ви не зберігли проект, при виході з проекту зміни будуть втрачені")) {
+            navigate("/projects");
+        }
+    }
+
     const generateLines = () => {
         const newLines: JSX.Element[] = [];
         project?.data!.map((detail: Detail, detailIndex: number) => {
-            const children = findAllChilren(detail);
+            const children = findAllChildren(detail);
             children!.forEach((child) => {
                 const childIndex = project.data!.indexOf(child);
 
@@ -167,7 +200,7 @@ const ProjectPage = () => {
                         <button type="button" className={buttonStyle + " w-full"} onClick={handleSave}>зберегти зміни</button>
                     </div>
                     <div className="flex justify-center">
-                        <button type="button" className={buttonStyle + " w-full"}>видалити проект</button>
+                        <button type="button" className={buttonStyle + " w-full"} onClick={handleDeleteProject}>видалити проект</button>
                     </div>
                 </div>
                 <Separator/>
@@ -179,7 +212,7 @@ const ProjectPage = () => {
                 <Separator/>
                 <div className="flex flex-col p-6 gap-4">
                     <div className="flex justify-center ">
-                        <button type="button" className={buttonStyle + " w-full"} onClick={() => navigate("/projects")}>вийти з проекта</button>
+                        <button type="button" className={buttonStyle + " w-full"} onClick={ handleEscape}>вийти з проекта</button>
                     </div>
                 </div>
             </div>

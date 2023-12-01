@@ -19,4 +19,8 @@ export default new class CardService {
     async getCard(cardId: string) {
         return (await $api.get(`card/${cardId}`)).data;
     }
+
+    async deleteCard(cardId: string) {
+        await $api.delete(`card/${cardId}`);
+    }
 }

@@ -45,4 +45,12 @@ export default new class CardService {
             throw error;
         }
     }
+
+    async deleteCard(cardId: string) {
+        try {
+            await cardModel.findByIdAndDelete(cardId);
+        } catch (error) {
+            throw error;
+        }
+    }
 }
