@@ -1,14 +1,14 @@
 import { useState } from "react";
-import userService from "../services/user-service";
-import { useNavigate } from "react-router-dom";
 import { largeLabelStyle } from "../styles/label-style";
 import inputStyle from "../styles/input-style";
 import buttonStyle from "../styles/button-style";
-import { Link } from "react-router-dom";
 import linkStyle from "../styles/link-syle";
+import { Link, useNavigate } from "react-router-dom";
+import userService from "../services/user-service";
+import { LoginCredentials } from "../types/user-types";
 import { toast } from "react-toastify";
 
-const LoginPage = () => {
+const RegisterPage = () => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
@@ -17,8 +17,9 @@ const LoginPage = () => {
     const submitHandler = async () => {
         try {
             if(email.length == 0 || password.length == 0) return toast.error("усі поля мають бути заповнені");
-            const response = await userService.login({email, password});
-            if(response!.status == "success") navigate("/projects");
+            const credentials: LoginCredentials = {email, password}
+            await userService.register(credentials);
+            navigate("/projects");
         } catch (error: any) {
             const message = error?.response?.data.message;
             if(message) toast.error(message);
@@ -26,10 +27,10 @@ const LoginPage = () => {
         }
     }
 
-    return <div className="flex justify-center pt-52">
-        <div className="flex flex-col">
+    return <div className="flex justify-center h-screen">
+            <div className="flex flex-col pt-52">
             <form className="rounded border shadow-lg p-4 flex flex-col gap-4">
-                <div className={"text-center " + largeLabelStyle}>вхід в обліковий запис</div>
+                <div className={"text-center " + largeLabelStyle}>створення облікового запису</div>
                 <div className="flex justify-between">
                     <div>
                         <label>Електрона пошта</label>
@@ -47,14 +48,14 @@ const LoginPage = () => {
                     </div>
                 </div>
                 <div className="flex justify-center">
-                    <button className={buttonStyle} type="button" onClick={submitHandler}>увійти</button>
+                    <button className={buttonStyle} type="button" onClick={submitHandler}>створити</button>
                 </div>
             </form>
             <div className="flex justify-center mt-4">
-                <Link to="/registration" className={linkStyle}>cтворити обліковий запис</Link>
+                <Link to="/login" className={linkStyle}>увійти з існуючого облівого запису</Link>
+            </div>
             </div>      
         </div>
-    </div>
-};
+}
 
-export default LoginPage;
+export default RegisterPage;

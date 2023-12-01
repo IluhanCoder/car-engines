@@ -12,8 +12,7 @@ import Separator from "../components/separator";
 import Project from "../types/project-type";
 import userStore from "../stores/userStore";
 import { observer } from "mobx-react-lite";
-import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
 import LoadingScreen from "../components/loading-screen";
 
 const ProjectPage = () => {
@@ -179,7 +178,6 @@ const ProjectPage = () => {
         return <div className="flex">
             <div className="overflow-auto grow">
                 <div className="h-screen p-4 relative line-container">
-                <ToastContainer/>
                     <div className="absolute w-full h-full">
                         {renderDetailWithChildren(project.data[0])}
                         {lines}

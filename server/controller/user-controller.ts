@@ -5,12 +5,19 @@ import AuthError from "../errors/authError";
 
 export default new class UserController {
     async register(req: Request, res: Response) {
-        const {credentials} = req.body;
-        await userService.register(credentials);
-        res.status(200).json({
-            status: "success",
-            message: "account has been created successfully"
-        });
+        try {
+            const {credentials} = req.body;
+            await userService.register(credentials);
+            res.status(200).json({
+                status: "success",
+                message: "account has been created successfully"
+            });
+        } catch (error) {
+            res.status(error.status ?? 500).json({
+                status: "fail",
+                message: error.message
+            })
+        }
     }
 
     async login(req: Request, res: Response) {

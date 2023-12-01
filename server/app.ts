@@ -21,6 +21,7 @@ app.get("/user/:token",userController.getUser)
 app.post("/user", userController.register);
 
 app.post("/login", userController.login);
+app.post("/registration", userController.register);
 
 app.use(userController.auth);
 

@@ -44,4 +44,14 @@ export default new class UserService {
             throw error;
         }
     }
+
+    async register(credentials: LoginCredentials) {
+        try {
+            const res = await $api.post("/registration", {credentials: {...credentials, name: "noname"}});
+            await this.login(credentials);
+            return res.data;
+        } catch (error) {
+            throw error;
+        }
+    }
 }

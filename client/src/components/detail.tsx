@@ -34,22 +34,22 @@ const DetailComponent = ({detail, handleChange, className, handleDelete, nameOpt
                             </select>
                         </div>
                         <div className="w-full grid grid-cols-2">
-                            <label className="mt-1 overflow-auto">Кількість годин</label>
-                            <input className={inputStyle} type="text" value={detail.hoursUsed} onChange={(e) => localChangeHandler("hoursUsed", Number(e.target.value))}/>
+                            <label className="mt-1 overflow-auto">Кількість годин (год.)</label>
+                            <input className={inputStyle} type="number" value={detail.hoursUsed} onChange={(e) => localChangeHandler("hoursUsed", Number(e.target.value))}/>
                         </div>
                         <div className="w-full grid grid-cols-2">
-                            <label className="mt-1 overflow-auto">Термін використання</label>
-                            <input className={inputStyle} type="text" value={detail.durability} onChange={(e) => localChangeHandler("durability", Number(e.target.value))}/>
+                            <label className="mt-1 overflow-auto">Термін використання (год.)</label>
+                            <input className={inputStyle} type="number" value={detail.durability} onChange={(e) => localChangeHandler("durability", Number(e.target.value))}/>
                         </div>
                         {
                             detail.rpm && <div className="w-full grid grid-cols-2">
-                                <label className="mt-1 overflow-auto">Кількість обертів</label>
+                                <label className="mt-1 overflow-auto">Кількість обертів (об/хв)</label>
                                 <input className={inputStyle} type="number" value={detail.rpm} onChange={(e) => localChangeHandler("rpm", e.target.value)}/>
                             </div>
                         }
                         {
                             detail.voltage && <div className="w-full grid grid-cols-2">
-                                <label className="mt-1 overflow-auto">Напруга</label>
+                                <label className="mt-1 overflow-auto">Напруга (В)</label>
                                 <input className={inputStyle}  type="number" value={detail.voltage} onChange={(e) => localChangeHandler("voltage", e.target.value)}/>
                             </div>
                         }
