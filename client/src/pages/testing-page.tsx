@@ -89,9 +89,11 @@ const TestingPage = () => {
                 const fromX = fromElement ? fromElement.getBoundingClientRect().left - containerRect.left + fromElement.getBoundingClientRect().width / 2 + window.scrollY : 0;
                 const toX = toElement ? toElement.getBoundingClientRect().left - containerRect.left + toElement.getBoundingClientRect().width / 2 + window.scrollY : 0;
 
-                const newLine1 = <div className={`z-1 absolute w-1 bg-gray-400`} style={{top:`${fromY - 20}px`,left:`${fromX}px`, height: `${(toY-fromY)/2}px`}}/>
-                const newLine2 = <div className={`z-1 absolute h-1 bg-gray-400`} style={{top:`${fromY+((toY-fromY)/2) - 20}px`,left:`${(fromX > toX) ? toX : fromX}px`, width: `${Math.abs(fromX-toX)}px`}}/>
-                const newLine3 = <div className={`z-1 absolute w-1 bg-gray-400`} style={{top:`${fromY+((toY-fromY)/2) - 20}px`,left:`${toX}px`, height: `${(toY-fromY)/2 + 6}px`}}/>
+                const color = (child.isWorkedOut) ? "bg-red-700" : "bg-gray-400"
+
+                const newLine1 = <div className={`z-1 absolute w-1 ${color}`} style={{top:`${fromY - 20}px`,left:`${fromX}px`, height: `${(toY-fromY)/2}px`}}/>
+                const newLine2 = <div className={`z-1 absolute h-1 ${color}`} style={{top:`${fromY+((toY-fromY)/2) - 20}px`,left:`${(fromX > toX) ? toX : fromX}px`, width: `${Math.abs(fromX-toX)}px`}}/>
+                const newLine3 = <div className={`z-1 absolute w-1 ${color}`} style={{top:`${fromY+((toY-fromY)/2) - 20}px`,left:`${toX}px`, height: `${(toY-fromY)/2 + 6}px`}}/>
 
                 newLines.push(newLine1);
                 newLines.push(newLine2);
@@ -180,6 +182,12 @@ const TestingPage = () => {
         setProject({...project!, data: [...tempData]});
     }
 
+    const repairAllHandler = () => {
+        project?.data.map((detail: Detail) => {
+            repairHandler(detail);
+        })
+    }
+
     if(project) return <div className="flex">
         <div className="overflow-auto grow">
             <div className="h-screen p-4 relative line-container">
@@ -222,6 +230,12 @@ const TestingPage = () => {
                 </div>
                 <div className="flex flex-col gap-1">
                     <button type="button" onClick={calculate} className={blueButtonStyle}>тест</button>
+                </div>
+            </div>
+            <Separator/>
+            <div className="flex flex-col p-6 gap-4">
+                <div className="flex justify-center">
+                    <button type="button" className={buttonStyle + " w-full"} onClick={repairAllHandler}>замінити всі деталі</button>
                 </div>
             </div>
             <Separator/>

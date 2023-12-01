@@ -20,9 +20,9 @@ const DetailComponent = ({detail, handleChange, className, handleDelete, nameOpt
         if(handleChange) handleChange(detail, field, value);
     }
 
-    return <div className={`${className} whitespace-nowrap rounded bg-white shadow-lg py-4 px-6 border text-sm`}>
+    return <div className={`${className} ${(testingMode && detail.isWorkedOut) && "border-red-700"} whitespace-nowrap rounded bg-white shadow-lg py-4 px-6 border text-sm`}>
                 <form className="flex flex-col gap-3">
-                        {testingMode && detail.isWorkedOut && <div className="text-center text-red p-2">
+                        {testingMode && detail.isWorkedOut && <div className="text-center text-red-700">
                             деталь потребує заміни
                             </div>}
                         {!testingMode && handleDelete && detail.parentIndex !== undefined && <div className="flex justify-end">
@@ -70,7 +70,7 @@ const DetailComponent = ({detail, handleChange, className, handleDelete, nameOpt
                             </div>}
                         {testingMode && <div className="flex gap-2">
                             <button type="button" className={buttonStyle} onClick={() => repairHandler!(detail!)}>замінити деталь</button>
-                            <button type="button" className={buttonStyle}>аналіз залишкового часу роботи</button>
+                            <button type="button" className={buttonStyle} onClick={() => alert(`залишилося ${(detail.durability - detail.hoursUsed).toFixed(0)} годин`)}>аналіз залишкового часу роботи</button>
                             </div>}
                     </form>
                 </div>
