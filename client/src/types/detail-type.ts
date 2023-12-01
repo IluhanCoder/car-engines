@@ -5,5 +5,7 @@ export default interface Detail {
     rpm?: number,
     voltage?: number,
     parentIndex?: number,
-    allowedChildren?: Detail[]
+    allowedChildren?: Detail[],
+    workCoef: number,
+    isWorkedOut: boolean
 }

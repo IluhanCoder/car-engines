@@ -60,7 +60,7 @@ const ProjectPage = () => {
 
     const handleAdd = (parentDetail: Detail) => {
         if(parentDetail.allowedChildren) {
-            const newDetail = {...parentDetail.allowedChildren[0], parentIndex: project?.data.indexOf(parentDetail)};
+            const newDetail: Detail = {...parentDetail.allowedChildren[0], parentIndex: project?.data.indexOf(parentDetail)};
             const newDetails = [...project?.data!, newDetail];
             setProject({...project!, data: [...newDetails!]});
         }

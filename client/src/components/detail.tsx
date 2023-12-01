@@ -35,21 +35,21 @@ const DetailComponent = ({detail, handleChange, className, handleDelete, nameOpt
                                 }
                             </select> || <label className={largeLabelStyle}>{detail.name}</label>}
                         </div>
-                        <div className="w-full grid grid-cols-2">
+                        {!testingMode && <div className="w-full grid grid-cols-2">
                             <label className="mt-1 overflow-auto">Кількість годин (год.)</label>
                             <input className={inputStyle} type="number" value={detail.hoursUsed} onChange={(e) => localChangeHandler("hoursUsed", Number(e.target.value))}/>
-                        </div>
-                        <div className="w-full grid grid-cols-2">
+                        </div>}
+                        {!testingMode && <div className="w-full grid grid-cols-2">
                             <label className="mt-1 overflow-auto">Термін використання (год.)</label>
                             <input className={inputStyle} type="number" value={detail.durability} onChange={(e) => localChangeHandler("durability", Number(e.target.value))}/>
-                        </div>
-                        {
+                        </div>}
+                        { !testingMode && 
                             detail.rpm && <div className="w-full grid grid-cols-2">
                                 <label className="mt-1 overflow-auto">Кількість обертів (об/хв)</label>
                                 <input className={inputStyle} type="number" value={detail.rpm} onChange={(e) => localChangeHandler("rpm", e.target.value)}/>
                             </div>
                         }
-                        {
+                        { !testingMode && 
                             detail.voltage && <div className="w-full grid grid-cols-2">
                                 <label className="mt-1 overflow-auto">Напруга (В)</label>
                                 <input className={inputStyle}  type="number" value={detail.voltage} onChange={(e) => localChangeHandler("voltage", e.target.value)}/>
@@ -58,6 +58,16 @@ const DetailComponent = ({detail, handleChange, className, handleDelete, nameOpt
                         {!testingMode && handleAdd && detail.allowedChildren && <div className="flex justify-center mt-2">
                             <button className={buttonStyle} type="button" onClick={() => handleAdd(detail)}>додати</button>
                         </div>}
+                        {testingMode && <div className="flex justify-center">
+                            <div className="flex flex-col">
+                                <div>Коефіціент часу роботи системи:</div>
+                                <div className="text-center text-xl">{`${detail.workCoef}%`}</div>
+                            </div>
+                            </div>}
+                        {testingMode && <div className="flex gap-2">
+                            <button type="button" className={buttonStyle}>замінити деталь</button>
+                            <button type="button" className={buttonStyle}>аналіз залишкового часу роботи</button>
+                            </div>}
                     </form>
                 </div>
 }
