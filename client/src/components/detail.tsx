@@ -6,14 +6,13 @@ import Detail from "../types/detail-type"
 interface LocalParams {
     detail: Detail,
     handleChange: (detail: Detail, field: string, value: any) => void,
-    index: number,
     handleAdd: (parent: Detail) => void,
     className?: string,
-    handleDelete: (index: number) => void,
-    parent: Detail | undefined,
+    handleDelete: (detail: Detail) => void,
+    nameOptions: string[]
 }
 
-const DetailComponent = ({detail, handleChange, index, handleAdd, className, handleDelete, parent}: LocalParams) => {
+const DetailComponent = ({detail, handleChange, className, handleDelete, nameOptions, handleAdd}: LocalParams) => {
     const localChangeHandler = (field: string, value: any) => {
         handleChange(detail, field, value);
     }
@@ -21,13 +20,13 @@ const DetailComponent = ({detail, handleChange, index, handleAdd, className, han
     return <div className={`${className} whitespace-nowrap rounded bg-white shadow-lg py-4 px-6 border text-sm`}>
                 <form className="flex flex-col gap-3">
                         {detail.parentIndex !== undefined && <div className="flex justify-end">
-                            <button type="button" className={buttonStyle} onClick={() => handleDelete(index)}>X</button>
+                            <button type="button" className={buttonStyle} onClick={() => handleDelete(detail)}>X</button>
                         </div>}
                         <div className="text-center">
                             <select className={selectStyle} value={detail.name} onChange={(e) => localChangeHandler("name", e.target.value)}>
                                 {
-                                    (detail.parentIndex !== undefined) ? parent!.allowedChildren!.map((detail: Detail) => {
-                                        return <option>{detail.name}</option>
+                                    (detail.parentIndex !== undefined) ? nameOptions!.map((nameOption: string) => {
+                                        return <option>{nameOption}</option>
                                     }) : DetailsList.map((detail: Detail) => {
                                         return <option>{detail.name}</option>
                                     })

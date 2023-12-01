@@ -66,10 +66,9 @@ const ProjectPage = () => {
         }
     }
 
-    const handleDelete = (index: number) => {
-        const parentDetail = project?.data![index];
-        const children = findAllChilren(parentDetail!);
-        const newDetails = project?.data.filter((detail: Detail) => !children!.includes(detail) && detail !== parentDetail);
+    const handleDelete = (detail: Detail) => {
+        const children = findAllChilren(detail!);
+        const newDetails = project?.data.filter((candidate: Detail) => !children!.includes(candidate) && candidate !== detail);
         setProject({...project!, data: [...newDetails!]});
     }
 
@@ -77,12 +76,17 @@ const ProjectPage = () => {
 
     const findAllChilren = (parentDetail: Detail) => project?.data.filter((currentDetail: Detail) => currentDetail.parentIndex === project.data.indexOf(parentDetail));
 
+    const getAllowedNames = (detail: Detail) => {
+        const parentDetail = project?.data[detail.parentIndex!];
+        return (parentDetail) ? parentDetail!.allowedChildren!.map((child: Detail) => child.name)! : DetailsList.map((det: Detail) => det.name);
+    }
+
     const renderDetailWithChildren = (detail: Detail) => {
         const children = findAllChilren(detail);
         const currentDetailIndex = project?.data!.indexOf(detail);
         return <div className="flex flex-col gap-8 flex-nowrap" key={currentDetailIndex} >
             <div className="flex flex-nowrap gap-5 z-10">
-                <DetailComponent parent={project?.data[detail!.parentIndex!]} handleDelete={handleDelete} className={currentDetailIndex!.toString()} detail={detail} handleAdd={handleAdd} handleChange={handleChange} index={currentDetailIndex!}/>
+                <DetailComponent nameOptions={getAllowedNames(detail)} handleDelete={handleDelete} className={currentDetailIndex!.toString()} detail={detail} handleAdd={handleAdd} handleChange={handleChange}/>
             </div>
             <div className="flex flex-nowrap gap-8"> {
                 children!.map((child: Detail) => {
@@ -90,7 +94,7 @@ const ProjectPage = () => {
                     const grandChilds = findAllChilren(child);
                     if(grandChilds!.length > 0) return renderDetailWithChildren(child);
                     else return <div key={childIndex} className="z-10">
-                            <DetailComponent parent={project?.data[child!.parentIndex!]} handleDelete={handleDelete} className={childIndex!.toString()} detail={child} handleAdd={handleAdd} handleChange={handleChange} index={childIndex!}/>
+                            <DetailComponent nameOptions={getAllowedNames(child)} handleDelete={handleDelete} className={childIndex!.toString()} detail={child} handleAdd={handleAdd} handleChange={handleChange}/>
                         </div>
                 })
             }</div>
