@@ -52,7 +52,7 @@ const ProjectPage = () => {
         }
 
         const detailFromList = findDetailFromList((field === "name") ? value : detail.name);
-        const newDetail: Detail = {...detailFromList!, parentIndex: detail.parentIndex};
+        const newDetail: Detail = {...(field === "name")?detailFromList!:detail, parentIndex: detail.parentIndex};
         if(field !== "name") (newDetail as any)[field] = value;
         const detailIndex = temp?.indexOf(detail);
         (temp as Detail[])[detailIndex!] = {...newDetail};

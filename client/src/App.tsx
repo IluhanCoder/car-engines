@@ -9,9 +9,7 @@ function App() {
   return (
     <div className="App h-full">
       <main>
-        <AuthProvider>
           <RouterProvider router={router}/>
-        </AuthProvider>
       </main>
     </div>
   );

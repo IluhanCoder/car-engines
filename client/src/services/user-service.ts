@@ -26,7 +26,7 @@ export default new class UserService {
             if(token) {
                 setHeader(token);
                 const user: User = (await $api.get(`/user/${token}`)).data.user;
-                userStore.setUser(user);
+                userStore.setUser({...user});
             }
             else {
                 dropHeaderAndToken();

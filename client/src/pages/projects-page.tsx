@@ -15,7 +15,7 @@ const ProjectsPage = () => {
     const userId = userStore.user?._id;
     const navigate = useNavigate();
 
-    const [projects, setProjects] = useState<Project[]>([]);
+    const [projects, setProjects] = useState<Project[]|undefined>();
 
     const fetchProjects = async () => {
         if(!userId) {
