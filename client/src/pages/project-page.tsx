@@ -205,7 +205,7 @@ const ProjectPage = () => {
                 <Separator/>
                 <div className="flex flex-col p-6 gap-4">
                     <div className="flex justify-center ">
-                        <button type="button" className={buttonStyle + " w-full"}>режим прогнозування</button>
+                        <button type="button" className={buttonStyle + " w-full"} onClick={() => navigate(`/testing/${project._id}`)}>режим тестування</button>
                     </div>
                 </div>
                 <Separator/>

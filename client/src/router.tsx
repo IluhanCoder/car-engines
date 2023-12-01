@@ -4,6 +4,7 @@ import ProjectPage from "./pages/project-page";
 import ProjectsPage from "./pages/projects-page";
 import AuthProvider from "./components/auth-provider";
 import RegisterPage from "./pages/register-page";
+import TestingPage from "./pages/testing-page";
 
 const router = createBrowserRouter([
     {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
     {
       path: "/project/:projectId",
       element: <AuthProvider><ProjectPage/></AuthProvider>
+    },
+    {
+      path: "/testing/:projectId",
+      element: <AuthProvider><TestingPage/></AuthProvider>
     },
     {
       path: "/projects",
