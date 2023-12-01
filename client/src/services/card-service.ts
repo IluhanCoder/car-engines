@@ -5,7 +5,7 @@ import Detail from "../types/detail-type";
 export default new class CardService {
     async createCard(data: Detail[], name: string) {
         const userId = userStore.user?._id;
-        await $api.post(`/card/${userId}`, {data, name});
+        return (await $api.post(`/card/${userId}`, {data, name})).data;
     }
 
     async updateCard(data: Detail[], cardId: string) {

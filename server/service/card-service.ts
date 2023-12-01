@@ -10,10 +10,10 @@ export default new class CardService {
                 name,
                 data,
                 creationTime: currentTime,
-                lastChangeTime: currentTime,
+                lastChangesTime: currentTime,
                 creatorId: new mongoose.Types.ObjectId(creatorId)
             }
-            await cardModel.create(newCard);
+            return await cardModel.create(newCard);
         }
         catch(error) {
             throw error;

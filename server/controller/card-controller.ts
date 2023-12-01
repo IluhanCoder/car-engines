@@ -6,10 +6,11 @@ export default new class CardController {
         try {
             const {data, name} = req.body;
             const {creatorId} = req.params;
-            await cardService.createCard(data, name, creatorId);
+            const newCard = await cardService.createCard(data, name, creatorId);
             res.status(200).json({
                 status: "success",
-                message: "card has been created successfully"
+                message: "card has been created successfully",
+                card: newCard
             })
         } catch (error) {
             res.status(error.status ?? 500).json({

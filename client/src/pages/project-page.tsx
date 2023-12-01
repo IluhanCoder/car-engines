@@ -14,6 +14,7 @@ import userStore from "../stores/userStore";
 import { observer } from "mobx-react-lite";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import LoadingScreen from "../components/loading-screen";
 
 const ProjectPage = () => {
     const navigate = useNavigate();
@@ -138,7 +139,7 @@ const ProjectPage = () => {
     }
 
     const handleEscape = () => {
-        if(window.confirm("Увага. Якщо ви не зберігли проект, при виході з проекту зміни будуть втрачені")) {
+        if(window.confirm("Увага. Якщо ви не зберeгли проект, при виході з проекту зміни будуть втрачені")) {
             navigate("/projects");
         }
     }
@@ -212,12 +213,12 @@ const ProjectPage = () => {
                 <Separator/>
                 <div className="flex flex-col p-6 gap-4">
                     <div className="flex justify-center ">
-                        <button type="button" className={buttonStyle + " w-full"} onClick={ handleEscape}>вийти з проекта</button>
+                        <button type="button" className={buttonStyle + " w-full"} onClick={handleEscape}>вийти з проекту</button>
                     </div>
                 </div>
             </div>
         </div>
-    else return <div>...</div>
+    else return <LoadingScreen/>
 }
 
 export default observer(ProjectPage);
