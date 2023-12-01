@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import userController from './controller/user-controller';
 import dotenv from "dotenv";
@@ -21,6 +21,8 @@ app.get("/*", function(req, res) {
 });
 
 app.use(express.json());
+
+app.get("/", (req: Request, res: Response) => res.status(200).send("server is responding"));
 
 app.get("/user/:token",userController.getUser)
 app.post("/user", userController.register);
