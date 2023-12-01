@@ -4,6 +4,7 @@ import userController from './controller/user-controller';
 import dotenv from "dotenv";
 import router from './router';
 import cors from "cors";
+import path = require('path');
 dotenv.config();
 
 const DB_CONN = process.env.DB_CONN!;
@@ -14,6 +15,10 @@ const app = express();
 app.use(cors({
     origin: process.env.API_URL
 }));
+
+app.get("/*", function(req, res) {
+    res.sendFile(path.join(__dirname, "index.html"));
+});
 
 app.use(express.json());
 
