@@ -16,10 +16,6 @@ app.use(cors({
     origin: process.env.API_URL
 }));
 
-app.get("/*", function(req, res) {
-    res.sendFile(path.join(__dirname, "index.html"));
-});
-
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => res.status(200).send("server is responding"));
