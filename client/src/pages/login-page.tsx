@@ -12,7 +12,7 @@ const LoginPage = () => {
         try {
             if(email.length == 0 || password.length == 0) throw new Error("всі поля мають бути заповнені");
             const response = await userService.login({email, password});
-            if(response.status == "success") navigate("/");
+            if(response.status == "success") navigate("/projects");
         } catch (error) {
             console.log(error)
         }

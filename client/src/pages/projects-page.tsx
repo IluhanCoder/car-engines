@@ -10,6 +10,7 @@ import currentProjectStore from "../stores/currentProjectStore";
 import DateFormater from "../misc/date-formatter";
 import { grayBoldLabelStyle, largeLabelStyle, lightBoldLabelStyle } from "../styles/label-style";
 import LoadingScreen from "../components/loading-screen";
+import userService from "../services/user-service";
 
 const ProjectsPage = () => {
     const userId = userStore.user?._id;
@@ -23,6 +24,15 @@ const ProjectsPage = () => {
         }
         const res = await cardService.fetchUserCards(userId!);
         setProjects([...res.data]);
+    }
+
+    const logoutHandler = async () => {
+        try {
+            await userService.logout();
+            navigate("/login");
+        } catch (error) {
+            throw error;
+        }
     }
 
     useEffect(() => {fetchProjects()}, [userId]);
@@ -88,7 +98,7 @@ const ProjectsPage = () => {
             <button className={blueButtonStyle} onClick={handleNewProject}>створити проект</button>
         </div>
         <div className="absolute left-2 bottom-2">
-            <button className={buttonStyle}>Вийти з облікового запису</button>
+            <button className={buttonStyle} onClick={logoutHandler}>Вийти з облікового запису</button>
         </div>
     </div>
     else return <LoadingScreen/>

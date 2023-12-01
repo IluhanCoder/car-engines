@@ -7,7 +7,7 @@ import AuthProvider from "./components/auth-provider";
 const router = createBrowserRouter([
     {
       path: "/login",
-      element: <AuthProvider><LoginPage/></AuthProvider>
+      element: <LoginPage/>
     },
     {
       path: "/project/:projectId",
