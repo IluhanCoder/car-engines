@@ -11,16 +11,20 @@ interface LocalParams {
     className?: string,
     handleDelete?: (detail: Detail) => void,
     nameOptions: string[],
-    testingMode?: boolean
+    testingMode?: boolean,
+    repairHandler?: (detail: Detail) => void
 }
 
-const DetailComponent = ({detail, handleChange, className, handleDelete, nameOptions, handleAdd, testingMode}: LocalParams) => {
+const DetailComponent = ({detail, handleChange, className, handleDelete, nameOptions, handleAdd, testingMode, repairHandler}: LocalParams) => {
     const localChangeHandler = (field: string, value: any) => {
         if(handleChange) handleChange(detail, field, value);
     }
 
     return <div className={`${className} whitespace-nowrap rounded bg-white shadow-lg py-4 px-6 border text-sm`}>
                 <form className="flex flex-col gap-3">
+                        {testingMode && detail.isWorkedOut && <div className="text-center text-red p-2">
+                            деталь потребує заміни
+                            </div>}
                         {!testingMode && handleDelete && detail.parentIndex !== undefined && <div className="flex justify-end">
                             <button type="button" className={buttonStyle} onClick={() => handleDelete(detail)}>X</button>
                         </div>}
@@ -61,11 +65,11 @@ const DetailComponent = ({detail, handleChange, className, handleDelete, nameOpt
                         {testingMode && <div className="flex justify-center">
                             <div className="flex flex-col">
                                 <div>Коефіціент часу роботи системи:</div>
-                                <div className="text-center text-xl">{`${detail.workCoef}%`}</div>
+                                <div className="text-center text-xl">{`${detail.workCoef.toFixed(2)}%`}</div>
                             </div>
                             </div>}
                         {testingMode && <div className="flex gap-2">
-                            <button type="button" className={buttonStyle}>замінити деталь</button>
+                            <button type="button" className={buttonStyle} onClick={() => repairHandler!(detail!)}>замінити деталь</button>
                             <button type="button" className={buttonStyle}>аналіз залишкового часу роботи</button>
                             </div>}
                     </form>

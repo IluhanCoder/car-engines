@@ -45,6 +45,13 @@ const DetailsList: Detail[] = [
                 isWorkedOut: false,
             },
             {
+                name: "автомобільне масло",
+                hoursUsed: 0,
+                durability: 10000,
+                workCoef: 100,
+                isWorkedOut: false
+            },
+            {
                 name: "циліндр" ,
                 hoursUsed: 0,
                 durability: 10000,
@@ -105,6 +112,8 @@ const DetailsList: Detail[] = [
                 hoursUsed: 0,
                 durability: 10000,
                 workCoef: 100,
+                voltage: 12,
+                maxVoltage: 15,
                 isWorkedOut: false,
             },
             {
@@ -231,14 +240,25 @@ const DetailsList: Detail[] = [
         rpm: 10000,
         durability: 10000,
         workCoef: 100,
+        voltage: 800,
+        maxVoltage: 1000,
         isWorkedOut: false,
         allowedChildren: [
+            {
+                name: "автомобільне масло",
+                hoursUsed: 0,
+                durability: 10000,
+                workCoef: 100,
+                isWorkedOut: false
+            },
             {
                 name: "акамулятор",
                 hoursUsed: 0,
                 durability: 10000,
                 workCoef: 100,
                 isWorkedOut: false,
+                voltage: 12,
+                maxVoltage: 15
             },
             {
                 name: "кардан",

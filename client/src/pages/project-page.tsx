@@ -205,7 +205,7 @@ const ProjectPage = () => {
                 <Separator/>
                 <div className="flex flex-col p-6 gap-4">
                     <div className="flex justify-center ">
-                        <button type="button" className={buttonStyle + " w-full"} onClick={() => navigate(`/testing/${project._id}`)}>режим тестування</button>
+                        <button type="button" className={buttonStyle + " w-full"} onClick={() => {if(window.confirm("увага! Якщо ви не зберігли проект, зміни буде втрачено при переході в режим тестування")) navigate(`/testing/${project._id}`)}}>режим тестування</button>
                     </div>
                 </div>
                 <Separator/>

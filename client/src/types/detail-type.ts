@@ -4,6 +4,7 @@ export default interface Detail {
     durability: number,
     rpm?: number,
     voltage?: number,
+    maxVoltage?: number,
     parentIndex?: number,
     allowedChildren?: Detail[],
     workCoef: number,

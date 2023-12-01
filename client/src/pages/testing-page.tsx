@@ -8,11 +8,17 @@ import DetailComponent from "../components/detail";
 import Detail from "../types/detail-type";
 import DetailsList from "../static/details-list";
 import Separator from "../components/separator";
-import buttonStyle from "../styles/button-style";
+import buttonStyle, { blueButtonStyle } from "../styles/button-style";
 import { grayBoldLabelStyle, largeLabelStyle } from "../styles/label-style";
+import inputStyle, { borderedInputStype, selectStyle } from "../styles/input-style";
 
 const TestingPage = () => {
     const [project, setProject] = useState<Project>();
+    const [load, setLoad] = useState<number>(1);
+    const [temperature, setTemperature] = useState<number>(25);
+    const [testTime, setTestTime] = useState<number>(0);
+    const [testStep, setTestStep] = useState<number>(30);
+
     const {projectId} = useParams();
     const [lines, setLines] = useState<JSX.Element[]>([]);
     const navigate = useNavigate();
@@ -35,6 +41,7 @@ const TestingPage = () => {
     } ,[userStore.user])
 
     const findAllChildren = (parentDetail: Detail) => project?.data.filter((currentDetail: Detail) => currentDetail.parentIndex === project.data.indexOf(parentDetail));
+    const findAllChildrenByIndex = (index: number) => project?.data.filter((currentDetail: Detail) => currentDetail.parentIndex === index);
 
     const getAllowedNames = (detail: Detail) => {
         const parentDetail = project?.data[detail.parentIndex!];
@@ -46,7 +53,7 @@ const TestingPage = () => {
         const currentDetailIndex = project?.data!.indexOf(detail);
         return <div className="flex flex-col gap-8 flex-nowrap" key={currentDetailIndex} >
             <div className="flex flex-nowrap gap-5 z-10">
-                <DetailComponent testingMode nameOptions={getAllowedNames(detail)} className={currentDetailIndex!.toString()} detail={detail}/>
+                <DetailComponent repairHandler={repairHandler} testingMode nameOptions={getAllowedNames(detail)} className={currentDetailIndex!.toString()} detail={detail}/>
             </div>
             <div className="flex flex-nowrap gap-8"> {
                 children!.map((child: Detail) => {
@@ -54,7 +61,7 @@ const TestingPage = () => {
                     const grandChilds = findAllChildren(child);
                     if(grandChilds!.length > 0) return renderDetailWithChildren(child);
                     else return <div key={childIndex} className="z-10">
-                            <DetailComponent testingMode nameOptions={getAllowedNames(child)}className={childIndex!.toString()} detail={child}/>
+                            <DetailComponent repairHandler={repairHandler} testingMode nameOptions={getAllowedNames(child)}className={childIndex!.toString()} detail={child}/>
                         </div>
                 })
             }</div>
@@ -94,6 +101,85 @@ const TestingPage = () => {
         setLines([...newLines]);
     }
 
+    const updateDetail = (detail: Detail, field: string, value: any) => {
+        const projectData = project?.data;
+        const newDetail = {...detail, [field]: value};
+        const tempData = projectData;
+        tempData![projectData?.indexOf(detail)!] = newDetail;
+        setProject({...project!, data: tempData!});
+    }
+
+    const calculate = () => {
+        project?.data.map((currentDetail: Detail, i: number) => {
+            if((currentDetail?.voltage!/10)>currentDetail?.maxVoltage!) {
+                const newValue = currentDetail.durability - currentDetail.durability/100 * (currentDetail?.voltage! / 10 - currentDetail?.maxVoltage!) * 8;
+                updateDetail(currentDetail, "durability", newValue);
+            }
+
+            if(currentDetail.hoursUsed >= currentDetail.durability) {
+                updateDetail(currentDetail, "isWorkedOut", true);
+            }
+
+            if(currentDetail.name === "автомобільне масло" && (temperature <= -40 || temperature >= 40)) {
+                updateDetail(currentDetail, "isWorkedOut", true);
+            }
+
+            if(currentDetail.name === "акамулятор" && (temperature <= -18 || temperature >= 35)) {
+                updateDetail(currentDetail, "isWorkedOut", true);
+            }
+
+            if(currentDetail.isWorkedOut) {
+                const children = findAllChildrenByIndex(i);
+                children?.map((child: Detail) => {
+                    updateDetail(child, "isWorkedOut", true);
+                })
+            }
+
+            if(currentDetail.isWorkedOut && (currentDetail.name === "поршневі кільця" || currentDetail.name === "поршневий палець")) {
+                const parent = project.data[currentDetail?.parentIndex!];
+                const newValue = parent.durability - (parent.durability / 100 * 30);
+                updateDetail(parent, "durability", newValue);
+            }
+        })
+
+        for (let i: number = 0; i < testStep; i++) {
+            project?.data.map((currentDetail: Detail) => {
+                if(currentDetail?.name==="двигун внутрішнього згорання" && currentDetail?.rpm! > 1000) {
+                    const newValue = currentDetail.hoursUsed + load + ((currentDetail?.rpm! - 1000) / 500) * (load / 5);
+                    updateDetail(currentDetail, "hoursUsed", newValue);
+                }
+                else updateDetail(currentDetail, "hoursUsed", currentDetail.hoursUsed + load);
+
+                if(currentDetail?.name==="електродвигун" && currentDetail?.rpm! > 13000) {
+                    const newValue = currentDetail.hoursUsed + (currentDetail?.rpm! / 1000) * (load / 3);
+                    updateDetail(currentDetail, "hoursUsed", newValue);
+                } else updateDetail(currentDetail, "hoursUsed", currentDetail.hoursUsed + load);
+
+
+            })
+        }
+
+        project?.data.map((currentDetail: Detail) => {
+            const newCoef = (currentDetail.isWorkedOut) ? 0 : 100 - ((currentDetail.hoursUsed / currentDetail.durability) * 100);
+            updateDetail(currentDetail, "workCoef", (newCoef < 0)? 0 : newCoef);
+        })
+    }
+
+    const findDetailFromList = (detail: Detail) => {
+        if (detail.parentIndex !== undefined) return project?.data[detail.parentIndex].allowedChildren?.filter((candidate: Detail) => candidate.name === detail.name)[0];
+        else return DetailsList.filter((candidate: Detail) => candidate.name === detail.name)[0];
+    }
+
+    const repairHandler = (detail: Detail) => {
+        console.log(detail);
+        const detailFromList = findDetailFromList(detail);
+        const newDetail: Detail = {...detailFromList!, parentIndex: detail.parentIndex};
+        const tempData = project?.data!;
+        const detailIndex = tempData?.indexOf(detail!);
+        tempData[detailIndex] = newDetail;
+        setProject({...project!, data: [...tempData]});
+    }
+
     if(project) return <div className="flex">
         <div className="overflow-auto grow">
             <div className="h-screen p-4 relative line-container">
@@ -114,12 +200,35 @@ const TestingPage = () => {
             </div>
             <Separator/>
             <div className="flex flex-col p-6 gap-4">
-                <div className="flex justify-center">
-                    <button type="button" className={buttonStyle + " w-full"} onClick={() => navigate(`/project/${project._id}`)}>завершити тестування</button>
+                <div className="flex flex-col gap-1 justify-center pb-2">
+                    <label className={grayBoldLabelStyle}>Навантаження:</label>
+                    <select className={selectStyle} value={load} onChange={(e) => setLoad(Number(e.target.value))}>
+                        <option value={0.5}>Слабке</option>
+                        <option value={1}>Нормальне</option>
+                        <option value={1.5}>Перевантаження</option>
+                    </select>
+                </div>
+                <div className="flex flex-col gap-1 justify-center text-center">
+                    <div>Температура {temperature}C</div>
+                    <input type="range" min={-40} max={60} value={temperature} onChange={(e) => setTemperature(Number(e.target.value))}/>
+                </div>
+                <div className="flex flex-col gap-1 justify-center text-center">
+                    <div>Загальний час:</div>
+                    <div>{testTime} год.</div>
+                </div>
+                <div className="flex flex-col gap-1">
+                    <div>Тривалість тесту (год.):</div>
+                    <input min={1} type="number" value={testStep} onChange={(e) => setTestStep(Number(e.target.value))} className={borderedInputStype}/>
+                </div>
+                <div className="flex flex-col gap-1">
+                    <button type="button" onClick={calculate} className={blueButtonStyle}>тест</button>
                 </div>
             </div>
             <Separator/>
             <div className="flex flex-col p-6 gap-4">
+                <div className="flex justify-center">
+                    <button type="button" className={buttonStyle + " w-full"} onClick={() => navigate(`/project/${project._id}`)}>завершити тестування</button>
+                </div>
                 <div className="flex justify-center ">
                     <button type="button" className={buttonStyle + " w-full"} onClick={handleEscape}>вийти з проекту</button>
                 </div>
